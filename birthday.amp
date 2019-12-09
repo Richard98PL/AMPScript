@@ -1,0 +1,43 @@
+%%[
+VAR @Birthdate
+Var @Today
+SET @Birthdate = Birthdate
+SET @Today = Now()
+
+Var @years, @months, @days
+
+SET @years = DateDiff(@Birthdate, @Today, "Y")
+SET @months = DateDiff(DateAdd(@Birthdate, @years, "Y"),@Today, "M")
+SET @days = DateDiff(DateAdd(DateAdd(@Birthdate, @months, "M"), @years, "Y"), @Today, "D")
+
+ VAR @AGE
+ VAR @BirthdayInfo
+ IF(@months > 0) THEN
+        SET @AGE = Subtract(@years,1)
+ ELSEIF(@months < 0) THEN
+      SET @AGE = @years
+ ELSEIF(@months == 0) THEN
+       IF(@days > 0) THEN
+         SET @AGE = Subtract(@years,1)
+       ELSEIF(@days == 0) THEN
+         SET @AGE = Subtract(@years,1)
+         SET @BirthdayInfo = CONCAT("<br />It's your birthday today! Happy ")
+         SET @BirthdayInfo = CONCAT(@BirthdayInfo, @AGE)
+         SET @BirthdayInfo = CONCAT(@BirthdayInfo, " anniversary!")
+       ELSEIF(@days < 0) THEN
+         SET @AGE = @years
+       ENDIF
+ ENDIF
+ 
+  
+]%%
+
+You have birthdate at %%=FORMAT(@Birthdate,"dd/MM/yyyy")=%% <br/>
+Today is %%=FORMAT(@Today,"dd/MM/yyyy")=%% <br/>
+y %%=v(@years)=%% <br />
+m %%=v(@months)=%% <br />
+d %%=v(@days)=%% <br />
+So you are already:
+
+%%=v(@AGE)=%% years old
+%%=v(@BirthdayInfo)=%%
