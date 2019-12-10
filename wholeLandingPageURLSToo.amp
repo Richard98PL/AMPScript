@@ -1,0 +1,168 @@
+%%[
+SET @fullname = RequestParameter('fullname')
+
+IF Empty(@fullname) OR @fullname == "Unknown" THEN
+ set @fullname = "web surfer"
+ENDIF
+
+ SET @Birthdate = RequestParameter('birthdate')
+ 
+ IF Empty(@Birthdate) OR @Birthdate == "Unknown" THEN
+ set @Birthdate = "12/10/2018 12:00:00 AM"
+ENDIF
+
+    SET @Today = Now()
+
+     Var @years, @months, @days 
+     SET @years = DateDiff(@Birthdate, @Today, "Y") 
+     SET @months = DateDiff(DateAdd(@Birthdate, @years, "Y"),@Today, "M") 
+     SET @days = DateDiff(DateAdd(DateAdd(@Birthdate, @months, "M"), @years, "Y"), @Today, "D") 
+
+     VAR @AGE 
+     VAR @BirthdayInfo 
+     
+     IF(@months > 0) THEN 
+        SET @AGE = Subtract(@years,1) 
+    ELSEIF(@months < 0) THEN 
+        SET @AGE = @years 
+    ELSEIF(@months == 0) THEN 
+        IF(@days > 0) THEN 
+            SET @AGE = Subtract(@years,1) 
+        ELSEIF(@days == 0) THEN 
+            SET @AGE = Subtract(@years,1) 
+            SET @BirthdayInfo = CONCAT("<br />It's your birthday today! Happy ") 
+            SET @BirthdayInfo = CONCAT(@BirthdayInfo, @AGE) 
+            SET @BirthdayInfo = CONCAT(@BirthdayInfo, " anniversary!") 
+        ELSEIF(@days < 0) THEN 
+            SET @AGE = @years 
+        ENDIF 
+    ENDIF 
+   
+ 
+ 
+    ]%%
+
+<div align="center">
+  <p6>Hello dear %%=v(@fullname)=%%<br>So you are already:</p6>
+    
+<p6>%%=v(@AGE)=%% years old</p6>
+%%=v(@BirthdayInfo)=%%
+  
+  
+</div>
+
+<table style="width:100%;">
+
+%%[
+
+VAR @EUROCHOOSEN, @PLNCHOOSEN
+
+SET @EUROCHOOSEN = 1
+SET @PLNCHOOSEN = 1
+
+
+ SET @CurrenciesByWeek = LookupOrderedRows("CurrenciesByWeek",5,"Week_Start DESC","return","1")
+ 
+ 
+ IF RowCount(@CurrenciesByWeek) > 0 THEN
+ FOR @i = 1 to RowCount(@CurrenciesByWeek) DO
+ SET @currency = ROW(@CurrenciesByWeek, @i)
+ SET @Week_Start = FIELD(@currency,"Week_Start")
+ SET @EURO = Field(@currency, "EURO")
+ Set @PLN = Field(@currency, "PLN")
+
+ 
+
+ IF( (DateDIff(Now(),@Week_Start,"D") < 7) AND (DateDIff(Now(),@Week_Start,"D") >= 0) ) THEN
+ SET @EUROCHOOSEN = @EURO
+ SET @PLNCHOOSEN = @PLN
+ SET @ChoosenWeek = @Week_Start
+ ENDIF
+ 
+ NEXT @i
+ENDIF
+ 
+ 
+ VAR @Products
+ IF (@AGE > 29) THEN
+ SET @Products = LookupOrderedRows("RogalexProducts2",3,"ProductName ASC","Type","SuitJacket")
+ ELSE
+ SET @Products = LookupOrderedRows("RogalexProducts2",3,"ProductName ASC","Type","Necktie")
+ ENDIF
+ 
+ SET @product = ROW(@Products, 1)
+ SET @ProductName1 = Field(@product, "ProductName")
+ Set @Cost1 = Field(@product, "Cost")
+ Set @EUROCOST1 = MULTIPLY(@Cost1,@EUROCHOOSEN)
+ SET @PLNCOST1 = MULTIPLY(@Cost1,@PLNCHOOSEN)
+ SET @DiscountedPrice1 = Field(@product,"DiscountedPrice")
+ Set @ImageCustomerKey1 = Field(@product, "CustomerKey")
+ 
+ Set @Image1 = ContentImagebyKey(@ImageCustomerKey1)
+ Set @Image1 = Replace(@Image1, ' src','width="100" height="100" src')
+ 
+  SET @product = ROW(@Products, 2)
+ SET @ProductName2 = Field(@product, "ProductName")
+ Set @Cost2 = Field(@product, "Cost")
+ Set @EUROCOST2 = MULTIPLY(@Cost2,@EUROCHOOSEN)
+ SET @PLNCOST2 = MULTIPLY(@Cost2,@PLNCHOOSEN)
+ SET @DiscountedPrice2 = Field(@product,"DiscountedPrice")
+ Set @ImageCustomerKey2 = Field(@product, "CustomerKey")
+ 
+ Set @Image2 = ContentImagebyKey(@ImageCustomerKey2)
+ Set @Image2 = Replace(@Image2, ' src','width="100" height="100" src')
+ 
+  SET @product = ROW(@Products, 3)
+ SET @ProductName3 = Field(@product, "ProductName")
+ Set @Cost3 = Field(@product, "Cost")
+ Set @EUROCOST3 = MULTIPLY(@Cost3,@EUROCHOOSEN)
+ SET @PLNCOST3 = MULTIPLY(@Cost3,@PLNCHOOSEN)
+ SET @DiscountedPrice3 = Field(@product,"DiscountedPrice")
+ Set @ImageCustomerKey3 = Field(@product, "CustomerKey")
+ 
+ Set @Image3 = ContentImagebyKey(@ImageCustomerKey3)
+ Set @Image3 = Replace(@Image3, ' src','width="100" height="100" src')
+ 
+ 
+]%%
+
+<tr>
+  <td>%%=v(@Image1)=%%</td>
+  <td>%%=v(@Image2)=%%</td>
+  <td>%%=v(@Image3)=%%</td>
+  </tr>
+  
+  <tr>
+   <td>%%=v(@ProductName1)=%%</td>
+    <td>%%=v(@ProductName2)=%%</td>
+    <td>%%=v(@ProductName3)=%%</td>
+  </tr>
+  
+  <tr>
+    <td>Old price:<del>%%=FormatCurrency(v(@Cost1),"en-US",3,"$")=%%</del></td>
+    <td>Old price:<del>%%=FormatCurrency(v(@Cost2),"en-US",3,"$")=%%</del></td>
+    <td>Old price:<del>%%=FormatCurrency(v(@Cost3),"en-US",3,"$")=%%</del></td>
+  </tr>
+  
+  <tr>
+    <td>New price: %%=FormatCurrency(v(@DiscountedPrice1),"en-US",3,"$")=%%</td>
+    <td>New price: %%=FormatCurrency(v(@DiscountedPrice2),"en-US",3,"$")=%%</td>
+    <td>New price: %%=FormatCurrency(v(@DiscountedPrice3),"en-US",3,"$")=%%</td>
+  </tr>
+  
+  <tr>
+    
+    <td>New price: %%=FormatCurrency(v(@EUROCOST1),"en-US",3,"€")=%%</td>
+    <td>New price: %%=FormatCurrency(v(@EUROCOST2),"en-US",3,"€")=%%</td>
+    <td>New price: %%=FormatCurrency(v(@EUROCOST3),"en-US",3,"€")=%%</td>
+  </tr>
+  
+  <tr>
+    <td>New price: %%=FormatCurrency(v(@PLNCOST1),"en-US",3,"PLN")=%%</td>
+    <td>New price: %%=FormatCurrency(v(@PLNCOST2),"en-US",3,"PLN")=%%</td>
+    <td>New price: %%=FormatCurrency(v(@PLNCOST3),"en-US",3,"PLN")=%%</td>
+  </tr>
+
+  </table>
+<br><br>
+<h2>*Choosen currency week that starts with %%=v(@ChoosenWeek)=%%</h2>
