@@ -8,7 +8,7 @@ ENDIF
  SET @Birthdate = RequestParameter('birthdate')
  
  IF Empty(@Birthdate) OR @Birthdate == "Unknown" THEN
- set @Birthdate = "12/10/2018 12:00:00 AM"
+ set @Birthdate = Now()
 ENDIF
 
     SET @Today = Now()
@@ -43,13 +43,23 @@ ENDIF
     ]%%
 
 <div align="center">
-  <p6>Hello dear %%=v(@fullname)=%%<br>So you are already:</p6>
-    
-<p6>%%=v(@AGE)=%% years old</p6>
-%%=v(@BirthdayInfo)=%%
+  <h1 style="color:purple; font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif; ">Hello dear %%=v(@fullname)=%%<br>
+
+</h1><h6>
+  %%[
+
+  IF(@AGE > 0) THEN
+  SET @TEXT = "So you are already"
+  SET @TEXT2 = " years old"
+ 
+  OUTPUT(CONCAT(@TEXT,@AGE,@TEXT2))
+  OUTPUT(v(@BirthdayInfo))
+ ENDIF
+]%%
   
   
-</div>
+  
+</h6></div>
 
 <table style="width:100%;">
 
@@ -126,7 +136,7 @@ ENDIF
  
 ]%%
 
-<tr>
+<tr style="margin: 5px;">
   <td>%%=v(@Image1)=%%</td>
   <td>%%=v(@Image2)=%%</td>
   <td>%%=v(@Image3)=%%</td>
@@ -139,30 +149,30 @@ ENDIF
   </tr>
   
   <tr>
-    <td>Old price:<del>%%=FormatCurrency(v(@Cost1),"en-US",3,"$")=%%</del></td>
-    <td>Old price:<del>%%=FormatCurrency(v(@Cost2),"en-US",3,"$")=%%</del></td>
-    <td>Old price:<del>%%=FormatCurrency(v(@Cost3),"en-US",3,"$")=%%</del></td>
+    <td>Old price :   <del>%%=FormatCurrency(v(@Cost1),"en-US",3,"$")=%%</del></td>
+    <td>Old price :   <del>%%=FormatCurrency(v(@Cost2),"en-US",3,"$")=%%</del></td>
+    <td>Old price :   <del>%%=FormatCurrency(v(@Cost3),"en-US",3,"$")=%%</del></td>
   </tr>
   
   <tr>
-    <td>New price: %%=FormatCurrency(v(@DiscountedPrice1),"en-US",3,"$")=%%</td>
-    <td>New price: %%=FormatCurrency(v(@DiscountedPrice2),"en-US",3,"$")=%%</td>
-    <td>New price: %%=FormatCurrency(v(@DiscountedPrice3),"en-US",3,"$")=%%</td>
+    <td>New price :   %%=FormatCurrency(v(@DiscountedPrice1),"en-US",3,"$")=%%</td>
+    <td>New price :   %%=FormatCurrency(v(@DiscountedPrice2),"en-US",3,"$")=%%</td>
+    <td>New price :   %%=FormatCurrency(v(@DiscountedPrice3),"en-US",3,"$")=%%</td>
   </tr>
   
   <tr>
     
-    <td>New price: %%=FormatCurrency(v(@EUROCOST1),"en-US",3,"€")=%%</td>
-    <td>New price: %%=FormatCurrency(v(@EUROCOST2),"en-US",3,"€")=%%</td>
-    <td>New price: %%=FormatCurrency(v(@EUROCOST3),"en-US",3,"€")=%%</td>
+    <td>New price :   %%=FormatCurrency(v(@EUROCOST1),"en-US",3,"€")=%%</td>
+    <td>New price :   %%=FormatCurrency(v(@EUROCOST2),"en-US",3,"€")=%%</td>
+    <td>New price :   %%=FormatCurrency(v(@EUROCOST3),"en-US",3,"€")=%%</td>
   </tr>
   
   <tr>
-    <td>New price: %%=FormatCurrency(v(@PLNCOST1),"en-US",3,"PLN")=%%</td>
-    <td>New price: %%=FormatCurrency(v(@PLNCOST2),"en-US",3,"PLN")=%%</td>
-    <td>New price: %%=FormatCurrency(v(@PLNCOST3),"en-US",3,"PLN")=%%</td>
+    <td>New price :   %%=FormatCurrency(v(@PLNCOST1),"en-US",3,"PLN")=%%</td>
+    <td>New price :   %%=FormatCurrency(v(@PLNCOST2),"en-US",3,"PLN")=%%</td>
+    <td>New price :   %%=FormatCurrency(v(@PLNCOST3),"en-US",3,"PLN")=%%</td>
   </tr>
 
   </table>
 <br><br>
-<h2>*Choosen currency week that starts with %%=v(@ChoosenWeek)=%%</h2>
+<h2 style="font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif;">*Choosen currency week that starts with %%=v(@ChoosenWeek)=%%</h2>
