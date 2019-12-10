@@ -1,0 +1,50 @@
+%%[
+SET @fullname = RequestParameter('fullname')
+
+IF Empty(@fullname) OR @fullname == "Unknown" THEN
+ set @fullname = "web surfer"
+ENDIF
+
+ SET @Birthdate = RequestParameter('birthdate')
+ 
+ IF Empty(@Birthdate) OR @Birthdate == "Unknown" THEN
+ set @Birthdate = "12/10/2018 12:00:00 AM"
+ENDIF
+
+    SET @Today = Now()
+
+     Var @years, @months, @days 
+     SET @years = DateDiff(@Birthdate, @Today, "Y") 
+     SET @months = DateDiff(DateAdd(@Birthdate, @years, "Y"),@Today, "M") 
+     SET @days = DateDiff(DateAdd(DateAdd(@Birthdate, @months, "M"), @years, "Y"), @Today, "D") 
+
+     VAR @AGE 
+     VAR @BirthdayInfo 
+     
+     IF(@months > 0) THEN 
+        SET @AGE = Subtract(@years,1) 
+    ELSEIF(@months < 0) THEN 
+        SET @AGE = @years 
+    ELSEIF(@months == 0) THEN 
+        IF(@days > 0) THEN 
+            SET @AGE = Subtract(@years,1) 
+        ELSEIF(@days == 0) THEN 
+            SET @AGE = Subtract(@years,1) 
+            SET @BirthdayInfo = CONCAT("<br />It's your birthday today! Happy ") 
+            SET @BirthdayInfo = CONCAT(@BirthdayInfo, @AGE) 
+            SET @BirthdayInfo = CONCAT(@BirthdayInfo, " anniversary!") 
+        ELSEIF(@days < 0) THEN 
+            SET @AGE = @years 
+        ENDIF 
+    ENDIF 
+    
+
+    ]%%
+
+<div align="center">
+  <p6>Hello dear %%=v(@fullname)=%%<br>So you are already:</p6>
+    
+<p6>%%=v(@AGE)=%% years old</p6>
+%%=v(@BirthdayInfo)=%%
+  
+</div>
