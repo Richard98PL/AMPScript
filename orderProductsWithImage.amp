@@ -1,0 +1,53 @@
+<table>
+  
+  <tr>
+    <td>Name</td>
+  <td>Quantity</td>
+   <td>UnitPrice</td>
+    <td>Date</td>
+    <td>Picture</td>
+  </tr>
+  
+%%[
+ VAR @Products
+ SET @Products = LookupOrderedRows("sk_order_items ",0,"Date desc","AccountId",AccountId)
+ 
+ IF RowCount(@Products) > 0 THEN
+ FOR @i = 1 to RowCount(@Products) DO
+ SET @product = ROW(@Products, @i)
+ 
+ SET @Name = Field(@product, "ProductName")
+ SET @Quantity = Field(@product, "Quantity")
+ SET @UnitPrice = Field(@product, "UnitPrice")
+ 
+ SET @Date = Field(@product, "Date")
+ OUTPUT( v(DateDiff(@Date, Now(), "D") ))
+ 
+ 
+ IF( DateDiff( @Date, Now(), "D") < 7 ) THEN
+ SET @Date = "Less than 7 days ago"
+ ELSE
+ SET @Date = "More than 7 days ago"
+ ENDIF
+ 
+ SET @PictureCustomerKeyByProductName = LookupRows("sk_products2","Name",@Name)
+ SET @ResultRow = ROW(@PictureCustomerKeyByProductName,1)
+ SET @PictureCustomerKey = FIELD(@ResultRow,"ImageCustomerKey__c")
+ SET @Image = ContentImagebyKey(@PictureCustomerKey)
+ Set @Image = Replace(@Image, ' src','width="100" height="200" src')
+
+]%%
+
+<tr>
+    <td>%%=v(@Name)=%%</td>
+  <td>%%=v(@Quantity)=%%</td>
+   <td>%%=v(@UnitPrice)=%%</td>
+    <td>%%=v(@Date)=%%</td>
+  <td>%%=v(@Image)=%%</td>
+  
+  </tr>
+%%[
+ NEXT @i
+ ENDIF
+]%%
+  </table>
