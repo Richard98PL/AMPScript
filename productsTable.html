@@ -1,3 +1,145 @@
+<div style="text-align: left; font-size:18px; font-weight:bold;">
+ Dear %%FirstName%%</div> <br> <br>
+  
+%%[
+ VAR @Products
+ /* important to get last order and the most valuable ! */
+ SET @Products = LookupOrderedRows("sk_order_items ",1,"Date desc, UnitPrice desc","AccountId",AccountId)
+ SET @neverBoughtAnything = true
+ 
+ IF RowCount(@Products) > 0 THEN
+   SET @product = ROW(@Products, 1)
+   SET @Name = Field(@product, "ProductName")
+   SET @Quantity = Field(@product, "Quantity")
+   SET @UnitPrice = Field(@product, "UnitPrice")
+   SET @Date = Field(@product, "Date")
+   SET @neverBoughtAnything = false 
+ ENDIF 
+ 
+ IF( @neverBoughtAnything == false ) THEN
+   IF( DateDiff( @Date, Now(), "D") < 7 ) THEN
+    SET @isSomethingBoughtInLast7Days = true
+   ENDIF
+ ELSE
+   SET @isSomethingBoughtInLast7Days = false
+ ENDIF
+ 
+
+   IF( @isSomethingBoughtInLast7Days == true ) THEN
+   
+     SET @Content = "Thanks for staying with us! <br> Here are our products related to your purchase"
+     
+     SET @RelatedProducts = LookupOrderedRows("sk_relatedProduct_junctionObject",3,"product2Name desc","product1Name",@Name) 
+     
+     SET @relatedProductID_ROW1 = ROW(@RelatedProducts ,1)
+     SET @relatedProductID_ROW2 = ROW(@RelatedProducts ,2)
+     SET @relatedProductID_ROW3 = ROW(@RelatedProducts ,3)
+     
+     SET @relatedProductID1 = Field(@relatedProductID_ROW1,"product2Name")
+     SET @relatedProductID2 = Field(@relatedProductID_ROW2,"product2Name")
+     SET @relatedProductID3 = Field(@relatedProductID_ROW3,"product2Name")
+     
+     SET @RelatedProduct1 = LookUpOrderedRows("sk_products2",1,"Name asc","Name",@relatedProductID1)
+     SET @RelatedProduct2 = LookUpOrderedRows("sk_products2",1,"Name asc","Name",@relatedProductID2)
+     SET @RelatedProduct3 = LookUpOrderedRows("sk_products2",1,"Name asc","Name",@relatedProductID3)
+     
+     /*1st relatedr */
+      SET @product = ROW(@RelatedProduct1, 1)
+
+      SET @Name1 = Field(@product, "Name")
+      SET @UnitPrice1 = Field(@product, "UnitPrice")
+      /*getting picture from another DE*/
+       SET @PictureCustomerKeyByProductName = LookupRows("sk_products2","Name",@Name1)
+       SET @ResultRow = ROW(@PictureCustomerKeyByProductName,1)
+       SET @PictureCustomerKey = FIELD(@ResultRow,"ImageCustomerKey__c")
+       SET @Image1 = ContentImagebyKey(@PictureCustomerKey)
+       Set @Image1 = Replace(@Image1, ' src','style="width:50%; min-height:85px; max-height:225px;" src')
+
+  /*2nd related */
+      SET @product = ROW(@RelatedProduct2, 1)
+
+      SET @Name2 = Field(@product, "Name")
+      SET @UnitPrice2 = Field(@product, "UnitPrice")
+      /*getting picture from another DE*/
+       SET @PictureCustomerKeyByProductName = LookupRows("sk_products2","Name",@Name2)
+       SET @ResultRow = ROW(@PictureCustomerKeyByProductName,1)
+       SET @PictureCustomerKey = FIELD(@ResultRow,"ImageCustomerKey__c")
+       SET @Image2 = ContentImagebyKey(@PictureCustomerKey)
+        Set @Image2 = Replace(@Image2, ' src','style="width:50%; min-height:85px; max-height:225px;" src')
+        
+  /*3rd related */
+      SET @product = ROW(@RelatedProduct3, 1)
+
+      SET @Name3 = Field(@product, "Name")
+      SET @UnitPrice3 = Field(@product, "UnitPrice")
+      /*getting picture from another DE*/
+       SET @PictureCustomerKeyByProductName = LookupRows("sk_products2","Name",@Name3)
+       SET @ResultRow = ROW(@PictureCustomerKeyByProductName,1)
+       SET @PictureCustomerKey = FIELD(@ResultRow,"ImageCustomerKey__c")
+       SET @Image3 = ContentImagebyKey(@PictureCustomerKey)
+        Set @Image3 = Replace(@Image3, ' src','style="width:50%; min-height:85px; max-height:225px;" src')
+       
+   ELSE
+    
+    SET @Content = "Hey! Here are our bestsellers from last 3 months. <br> Maybe you want to check them out?"
+
+    SET @BESTSELLERS = LookupOrderedRows("sk_products2_soldQuantities",3,"SoldQuantity__c desc","return","1")
+    SET @BESTSELLER1 = ROW(@BESTSELLERS,1)
+    SET @BESTSELLER2 = ROW(@BESTSELLERS,2)
+    SET @BESTSELLER3 = ROW(@BESTSELLERS,3)
+    
+    SET @BESTSELLER1_Name = Field(@BESTSELLER1, "Name")
+    SET @BESTSELLER2_Name = Field(@BESTSELLER2, "Name")
+    SET @BESTSELLER3_Name = Field(@BESTSELLER3, "Name")
+    
+    SET @BestsellerProduct1 = LookupOrderedRows("sk_products2",1,"Name desc","Name",@BESTSELLER1_Name)
+    SET @BestsellerProduct2 = LookupOrderedRows("sk_products2",1,"Name desc","Name",@BESTSELLER2_Name)
+    SET @BestsellerProduct3 = LookupOrderedRows("sk_products2",1,"Name desc","Name",@BESTSELLER3_Name)
+    /*sum the quantities from 3 months*/
+    
+     
+  /*1st bestseller */
+      SET @product = ROW(@BestsellerProduct1, 1)
+
+      SET @Name1 = Field(@product, "Name")
+      SET @UnitPrice1 = Field(@product, "UnitPrice")
+      /*getting picture from another DE*/
+       SET @PictureCustomerKeyByProductName = LookupRows("sk_products2","Name",@Name1)
+       SET @ResultRow = ROW(@PictureCustomerKeyByProductName,1)
+       SET @PictureCustomerKey = FIELD(@ResultRow,"ImageCustomerKey__c")
+       SET @Image1 = ContentImagebyKey(@PictureCustomerKey)
+        Set @Image1 = Replace(@Image1, ' src','style="width:50%; min-height:85px; max-height:225px;" src')
+
+  /*2nd bestseller */
+      SET @product = ROW(@BestsellerProduct2, 1)
+
+      SET @Name2 = Field(@product, "Name")
+      SET @UnitPrice2 = Field(@product, "UnitPrice")
+      /*getting picture from another DE*/
+       SET @PictureCustomerKeyByProductName = LookupRows("sk_products2","Name",@Name2)
+       SET @ResultRow = ROW(@PictureCustomerKeyByProductName,1)
+       SET @PictureCustomerKey = FIELD(@ResultRow,"ImageCustomerKey__c")
+       SET @Image2 = ContentImagebyKey(@PictureCustomerKey)
+        Set @Image2 = Replace(@Image2, ' src','style="width:50%; min-height:85px; max-height:225px;" src')
+
+  /*3rd bestseller */
+      SET @product = ROW(@BestsellerProduct3, 1)
+
+      SET @Name3 = Field(@product, "Name")
+      SET @UnitPrice3 = Field(@product, "UnitPrice")
+      /*getting picture from another DE*/
+       SET @PictureCustomerKeyByProductName = LookupRows("sk_products2","Name",@Name3)
+       SET @ResultRow = ROW(@PictureCustomerKeyByProductName,1)
+       SET @PictureCustomerKey = FIELD(@ResultRow,"ImageCustomerKey__c")
+       SET @Image3 = ContentImagebyKey(@PictureCustomerKey)
+        Set @Image3 = Replace(@Image3, ' src','style="width:50%; min-height:85px; max-height:225px;" src')
+       
+ ENDIF
+
+
+]%%
+
+
 <div style="text-align: left; font-size:15px; font-weight:bold;">%%=v(@Content)=%%</div>
 
 <br /> <br />
