@@ -53,7 +53,7 @@
        SET @ResultRow = ROW(@PictureCustomerKeyByProductName,1)
        SET @PictureCustomerKey = FIELD(@ResultRow,"ImageCustomerKey__c")
        SET @Image1 = ContentImagebyKey(@PictureCustomerKey)
-       Set @Image1 = Replace(@Image1, ' src','style="width:50%; min-height:85px; max-height:225px;" src')
+       Set @Image1 = Replace(@Image1, ' src','style="width:50%; min-height:65px; max-height:225px;" src')
 
   /*2nd related */
       SET @product = ROW(@RelatedProduct2, 1)
@@ -65,7 +65,7 @@
        SET @ResultRow = ROW(@PictureCustomerKeyByProductName,1)
        SET @PictureCustomerKey = FIELD(@ResultRow,"ImageCustomerKey__c")
        SET @Image2 = ContentImagebyKey(@PictureCustomerKey)
-        Set @Image2 = Replace(@Image2, ' src','style="width:50%; min-height:85px; max-height:225px;" src')
+        Set @Image2 = Replace(@Image2, ' src','style="width:50%; min-height:65px; max-height:225px;" src')
         
   /*3rd related */
       SET @product = ROW(@RelatedProduct3, 1)
@@ -77,7 +77,7 @@
        SET @ResultRow = ROW(@PictureCustomerKeyByProductName,1)
        SET @PictureCustomerKey = FIELD(@ResultRow,"ImageCustomerKey__c")
        SET @Image3 = ContentImagebyKey(@PictureCustomerKey)
-        Set @Image3 = Replace(@Image3, ' src','style="width:50%; min-height:85px; max-height:225px;" src')
+        Set @Image3 = Replace(@Image3, ' src','style="width:50%; min-height:65px; max-height:225px;" src')
        
    ELSE
     
@@ -108,7 +108,7 @@
        SET @ResultRow = ROW(@PictureCustomerKeyByProductName,1)
        SET @PictureCustomerKey = FIELD(@ResultRow,"ImageCustomerKey__c")
        SET @Image1 = ContentImagebyKey(@PictureCustomerKey)
-        Set @Image1 = Replace(@Image1, ' src','style="width:50%; min-height:85px; max-height:225px;" src')
+        Set @Image1 = Replace(@Image1, ' src','style="width:50%; min-height:65px; max-height:225px;" src')
 
   /*2nd bestseller */
       SET @product = ROW(@BestsellerProduct2, 1)
@@ -120,7 +120,7 @@
        SET @ResultRow = ROW(@PictureCustomerKeyByProductName,1)
        SET @PictureCustomerKey = FIELD(@ResultRow,"ImageCustomerKey__c")
        SET @Image2 = ContentImagebyKey(@PictureCustomerKey)
-        Set @Image2 = Replace(@Image2, ' src','style="width:50%; min-height:85px; max-height:225px;" src')
+        Set @Image2 = Replace(@Image2, ' src','style="width:50%; min-height:65px; max-height:225px;" src')
 
   /*3rd bestseller */
       SET @product = ROW(@BestsellerProduct3, 1)
@@ -132,7 +132,7 @@
        SET @ResultRow = ROW(@PictureCustomerKeyByProductName,1)
        SET @PictureCustomerKey = FIELD(@ResultRow,"ImageCustomerKey__c")
        SET @Image3 = ContentImagebyKey(@PictureCustomerKey)
-        Set @Image3 = Replace(@Image3, ' src','style="width:50%; min-height:85px; max-height:225px;" src')
+        Set @Image3 = Replace(@Image3, ' src','style="width:50%; min-height:65px; max-height:225px;" src')
        
  ENDIF
 
