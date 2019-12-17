@@ -1,0 +1,197 @@
+<div style="text-align: left; font-size:18px; font-weight:bold;">
+ We are really happy to begin our journey with you in Rogalex</div> <br> <br>
+  
+%%[
+
+SET @contact_account = LookupRows("Account_Salesforce","Id",AccountId)
+
+IF RowCount(@contact_account) > 0 THEN
+ SET @account = ROW(@contact_account, 1)
+ SET @contact_account_industry = FIELD(@account,"Industry")
+ENDIF
+
+SET @contact_role = Role__c
+
+IF (@contact_role == "CEO") THEN
+ SET @Content = Concat("Dear ", Salutation, " ", LastName, " <br>It is an honor for us to welcome you to Rogalex.")
+ELSEIF (@contact_role == "Manager") THEN
+ SET @Content = Concat("Dear ", FirstName, " ", LastName," <br> Nice to have you as client.")
+ELSEIF (@contact_role == "HR") THEN
+ SET @Content = Concat("Hey ", FirstName, "<br> Looking forward to long lasting relationship between us :).")
+ELSEIF (@contact_role == "Salesr") THEN
+ SET @Content = Concat(Salutation, " ",FirstName,"<br> We encourage you to familiarize yourself with the offer.")
+ELSE
+ SET @Content = Concat(Salutation, " ", "LastName", " hi! Welcome to Rogalex :).")
+ENDIF
+
+]%%
+
+ %%=v(@Content)=%%
+
+<br>
+Below we introduce the list of products that can be interesting
+
+<table style="width:100%;">
+
+%%[
+
+
+ IF( @contact_account_industry == "Engineering" ) THEN
+  SET @industryChoicePrice = "UnitPrice DESC"
+ ELSE
+  SET @industryChoicePrice = "UnitPrice ASC"
+ ENDIF
+ 
+ VAR @Products
+ SET @Products = LookupOrderedRows("sk_products2",3,@industryChoicePrice,"return","1")
+ 
+ /*product 1*/
+ SET @product = ROW(@Products, 1)
+ SET @ProductName1 = Field(@product, "Name")
+ Set @Cost1 = Field(@product, "UnitPrice")
+ Set @ImageCustomerKey1 = Field(@product, "ImageCustomerKey__c")
+ 
+ Set @Image1 = ContentImagebyKey(@ImageCustomerKey1)
+ Set @Image1 = Replace(@Image1, ' src','width="50%" src')
+ 
+ Set @DiscountedCost1 = Multiply(@Cost1,0.8)
+ 
+  /*product 2*/
+  SET @product = ROW(@Products, 2)
+ SET @ProductName2 = Field(@product, "Name")
+ Set @Cost2 = Field(@product, "UnitPrice")
+ Set @ImageCustomerKey2 = Field(@product, "ImageCustomerKey__c")
+ 
+ Set @Image2 = ContentImagebyKey(@ImageCustomerKey2)
+ Set @Image2 = Replace(@Image2, ' src','width="50%" src')
+ 
+ Set @DiscountedCost2 = Multiply(@Cost2,0.8)
+ 
+  /*product 3*/
+  SET @product = ROW(@Products, 3)
+ SET @ProductName3 = Field(@product, "Name")
+ Set @Cost3 = Field(@product, "UnitPrice")
+ Set @ImageCustomerKey3 = Field(@product, "ImageCustomerKey__c")
+ 
+ Set @Image3 = ContentImagebyKey(@ImageCustomerKey3)
+ Set @Image3 = Replace(@Image3, ' src','width="50%" src')
+ 
+ Set @DiscountedCost3 = Multiply(@Cost3,0.8)
+ 
+ 
+ 
+ 
+]%%
+<br /><br />
+
+
+<table>
+  
+  <tr>
+    
+    <td style="text-align:center; border: 1px solid black; width:33%; padding: 7px;" >
+ 
+      <table>
+        
+        <tr>
+   <td style=" height:300px; display:table-cell; vertical-align:middle; text-align:center; ">
+    %%=v(@Image1)=%%
+   </td>
+        </tr>
+        
+       <tr>
+     <td style=" height:35px; display:table-cell; vertical-align:middle; text-align:center; ">
+      %%=v(@ProductName1)=%%
+   </td>
+       </tr>
+        
+        <tr>
+   <td style=" height:35px; display:table-cell; vertical-align:middle; text-align:center;  color:red;">
+   <del>%%=FormatCurrency(v(@Cost1),"en-US",2,"$")=%%</del> 
+    </td>
+        </tr>
+        
+        <tr>
+   <td style=" height:35px; display:table-cell; vertical-align:middle; text-align:center;">
+     %%=FormatCurrency(v(@DiscountedCost1),"en-US",2,"$")=%%
+    </td>
+        </tr>
+        
+      </table>
+   
+    </td>
+
+   
+    
+       <td style="text-align:center; border: 1px solid black; width:33%; padding: 7px;" >
+ 
+      <table>
+        
+        <tr>
+   <td style=" height:300px; display:table-cell; vertical-align:middle; text-align:center; ">
+    %%=v(@Image2)=%%
+   </td>
+        </tr>
+        
+       <tr>
+     <td style=" height:35px; display:table-cell; vertical-align:middle; text-align:center; ">
+      %%=v(@ProductName2)=%%
+   </td>
+       </tr>
+        
+        <tr>
+   <td style=" height:35px; display:table-cell; vertical-align:middle; text-align:center; color: red;">
+    <del>%%=FormatCurrency(v(@Cost2),"en-US",2,"$")=%%</del>
+    </td>
+        </tr>
+        
+        <tr>
+   <td style=" height:35px; display:table-cell; vertical-align:middle; text-align:center; ">
+    %%=FormatCurrency(v(@DiscountedCost2),"en-US",2,"$")=%%
+    </td>
+        </tr>
+        
+      </table>
+   
+    </td>
+
+  
+  
+    
+     <td style="text-align:center; border: 1px solid black; width:33%; padding: 7px;" >
+ 
+      <table>
+        
+        <tr>
+   <td style=" height:300px; display:table-cell; vertical-align:middle; text-align:center; ">
+    %%=v(@Image3)=%%
+   </td>
+        </tr>
+        
+       <tr>
+     <td style=" height:35px; display:table-cell; vertical-align:middle; text-align:center; ">
+      %%=v(@ProductName3)=%%
+   </td>
+       </tr>
+        
+        <tr>
+   <td style=" height:35px; display:table-cell; vertical-align:middle; text-align:center; color:red;">
+    <del>%%=FormatCurrency(v(@Cost3),"en-US",2,"$")=%%</del>
+    </td>
+        </tr>
+        
+        <tr>
+   <td style=" height:35px; display:table-cell; vertical-align:middle; text-align:center; ">
+    %%=FormatCurrency(v(@DiscountedCost3),"en-US",2,"$")=%%
+    </td>
+        </tr>
+        
+      </table>
+   
+    </td>
+ 
+  </tr>
+
+</table>
+
+
